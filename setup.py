@@ -18,5 +18,5 @@ setup(
     install_requires=packages,
     url='https://github.com/abeja-inc/platform-template-object-detection/',
     license='MIT License',
-    pakcage=find_packages(exclude=('tests', 'docs'))
+    pakcage=find_packages(exclude=('tests', 'docs', '.abeja', '.github'))
 )
