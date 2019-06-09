@@ -1,6 +1,7 @@
 # お仕事のメモ
 
 今回は**ABEJA PlatformへのObject Detectionのテンプレート作成**を行う。
+汎用的な設計にする。
 
 ## タスク
 
