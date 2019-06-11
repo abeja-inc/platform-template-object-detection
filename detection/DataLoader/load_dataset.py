@@ -11,7 +11,8 @@
 import sys, os, io
 
 import numpy as np 
-from abeja.datasets import Client
+from abeja.datalake import Client as DatalakeClient
+from abeja.datasets import Client as DatasetClient
 from abejacli.config import ABEJA_PLATFORM_USER_ID, ABEJA_PLATFORM_TOKEN
 
 
@@ -67,4 +68,5 @@ def upload_datalake(file, channel):
     file = channel.upload_file(file)
 
     return file
+
 
