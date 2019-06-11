@@ -17,13 +17,18 @@ from abeja.datasets import Client as DatasetClient
 from abejacli.config import ABEJA_PLATFORM_USER_ID, ABEJA_PLATFORM_TOKEN
 
 
-class DataUploader:
+class DataLoader:
     def __init__(self, organization_id: str):
         self.organization_id = organization_id
         self.credential = {
             'user_id': ABEJA_PLATFORM_USER_ID,
             'personal_access_token': ABEJA_PLATFORM_TOKEN
         }
+        self.datalake_client = DatalakeClient(organization_id=self.organization_id, 
+                                              credential=self.credential)
+        self.dataset_client = DatasetClient(organization_id=self.organization_id,
+                                            credential=self.credential)
+
 
     def create_datalake_channel(self, name: str, description: str):
         """
@@ -39,17 +44,14 @@ class DataUploader:
 
         Usage
             >>> organization_id = "XXXXXXXXXXX"
-            >>> datauploader = DataUploader(organization_id)
+            >>> dataloader = DataLoader(organization_id)
             >>> name = "test channel"
             >>> description = "this is test datalake"
-            >>> channel = datauploader.make_datalake_channel(name, description)
+            >>> channel = dataLoader.make_datalake_channel(name, description)
         """
 
-        datalake_client = DatalakeClient(organization_id=self.organization_id, 
-                                         credential=self.credential)
-
-        channel = datalake_client.channels.create(name, description, 
-                                                  StorageType.DATALAKE.value)
+        channel = self.datalake_client.channels.create(name, description, 
+                                                       StorageType.DATALAKE.value)
 
         return channel
 
@@ -67,10 +69,10 @@ class DataUploader:
 
         Usage
             >>> organization_id = "XXXXXXXXXXX"
-            >>> datauploader = DataUploader(organization_id)
-            >>> channel = datauploader.make_datalake_channel(name, description)
+            >>> dataloader = DataLoader(organization_id)
+            >>> channel = datalader.make_datalake_channel(name, description)
             >>> file_paht = "./data/cat.jpg"
-            >>> file = datauploader.upload_datalake(file_path, channel)
+            >>> file = dataloader.upload_datalake(file_path, channel)
         """
 
         file = channel.upload_file(file)
@@ -102,10 +104,10 @@ class DataUploader:
 
         Usage
             >>> organization_id = "XXXXXXXXXXX"
-            >>> datauploader = DataUploader(organization_id)
+            >>> dataloader = DataLoader(organization_id)
             >>> label_lst = [["dog", "cat"], ["man", "woman"]]
-            >>> ategory_lst = ["animal", "human"]
-            >>> dataset = datauploader.make_dataset_detection(label_lst, category_lst)
+            >>> category_lst = ["animal", "human"]
+            >>> dataset = datakoader.make_dataset_detection(label_lst, category_lst)
         """
 
         # assert same length
@@ -129,16 +131,17 @@ class DataUploader:
 
         props = {"categories": categories}    
 
-        dataset = datasets_client.datasets.create(name=dataset_name, type=task_type, props=props)
+        dataset = self.dataset_client.datasets.create(name=dataset_name, type=task_type, props=props)
 
         return dataset
 
 
-    def upload_dataset(self, data_mask: {str:int}, file: str, file_type: str, task_type: str, channel):
+    def upload_dataset(self, dateset, data_mask: {str:int}, file: str, file_type: str, task_type: str, channel):
         """
         Upload file on dataset with annotation
 
         Arguments
+            dataset : created dataset with crate_dataset()
             data_mask : label data of input image
                         ex) classification -> {"category_id": 0, 
                                                "label_id": 1}
@@ -161,21 +164,24 @@ class DataUploader:
         
         Usage
             >>> organization_id = "XXXXXXXXX"
-            >>> datauploader = DataUploader(organization_id)
+            >>> dataloader = DataLoader(organization_id)
             >>> datalake_name = "hogehoge lake"
             >>> datalake_description = "this is hogehoge lake test"
-            >>> channel = datauploader.create_datalake_channel(datalake_name, datalake_description)
+            >>> channel = dataloader.create_datalake_channel(datalake_name, datalake_description)
+            >>> label_lst = [["dog", "cat"], ["man", "woman"]]
+            >>> category_lst = ["animal", "human"]
+            >>> dataset = datakoader.make_dataset_detection(label_lst, category_lst)
             >>> file_path = "./tmp/foo.jpg"
             >>> file_type = "image/jpeg"
             >>> task_type = "detection"
-            >>> file = datauploader.upload_datalake(file_path, channel)
+            >>> file = dataloader.upload_datalake(file_path, channel)
             >>> data_mask = {"category_id": 0,
                              "label_id": 2,
                              "rect": {'xmin': 200, 
                                       'ymin': 0, 
                                       'xmax': 1000, 
                                       'ymax': 900}}
-            >>> dataset_item = datauploader.upload_dataset(data_mask, file, file_type, task_type, channel)
+            >>> dataset_item = dataloader.upload_dataset(data_mask, file, file_type, task_type, channel)
         """
 
         source_data = [{
@@ -186,9 +192,34 @@ class DataUploader:
 
         attributes = {task_type: [data_mask]}
 
-        dataset_item = dataset.dataset_items.create(source_data=source_data, attributes=attributes)
+        dataset_item = self.dataset_client.dataset_items.create(source_data=source_data, attributes=attributes)
 
         return dataset_item
     
 
-    
+    def download_dataset(self, dataset_id: str, max_num=None: int, prefetch=False: bool):
+        """
+        Download your favorite dataset
+
+        Arguments
+            dataset_id : dataset id for ABEJA Platform [str]
+                         ex) dataset_id = "1788652111540"
+            max_num : the max number of dataset items
+        
+        Return
+            dataset_item
+        
+        Usage
+            >>> organization_id = "XXXXXXXXXXXX"
+            >>> dataloader = DataLoader(organization_id)
+            >>> dataset = dataloader.download_dataset(dataset_id)
+            >>> for item in dataset.dataset_items.list(prefetch=True):
+                    # Get data from the dataset source
+            >>>     file_content = item.source_data[0].get_content()
+            >>>     # Get attribute of that dataset
+            >>>     label = item.attributes['classification'][0]['label_id']
+        """
+
+        dataset = self.dataset_client.get_dataset(dataset_id)
+
+        return dataset
