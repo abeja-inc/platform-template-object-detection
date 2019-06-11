@@ -205,21 +205,26 @@ class DataLoader:
             dataset_id : dataset id for ABEJA Platform [str]
                          ex) dataset_id = "1788652111540"
             max_num : the max number of dataset items
+            prefetch : whether or not to use cache to download dataset
         
         Return
-            dataset_item
+            dataset_item [List]
         
         Usage
             >>> organization_id = "XXXXXXXXXXXX"
             >>> dataloader = DataLoader(organization_id)
             >>> dataset = dataloader.download_dataset(dataset_id)
-            >>> for item in dataset.dataset_items.list(prefetch=True):
-                    # Get data from the dataset source
-            >>>     file_content = item.source_data[0].get_content()
-            >>>     # Get attribute of that dataset
-            >>>     label = item.attributes['classification'][0]['label_id']
         """
 
         dataset = self.dataset_client.get_dataset(dataset_id)
 
-        return dataset
+        if max_num is not None:
+            dataset_list = dataset.dataset_items.list(prefetch=prefetch)
+            ret = []
+            for d in dataset_list:
+                ret.append(d)
+                if len(ret) > max_num:
+                    break
+            return ret
+        else:
+            return dataset.dataset_items.list(prefetch=prefetch)
