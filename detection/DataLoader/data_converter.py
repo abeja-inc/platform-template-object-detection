@@ -19,30 +19,6 @@ import torch
 import torch.utils.data
 
 
-class DataDownloader:
-    def __init__(self, organization_id: str):
-        self.organization_id = organization_id
-        self.credential = {
-            'user_id': ABEJA_PLATFORM_USER_ID,
-            'personal_access_token': ABEJA_PLATFORM_TOKEN
-        }
-    
-    def load_dataset_from_api(self, dataset_id: str, max_num=None: int):
-        client = DatasetClient(self.organization_id, self.credential)
-        dataset = client.get_dataset(dataset_id)
-    
-        if max_num is not None:
-            dataset_list = dataset.dataset_items.list(prefetch=False)
-            ret = []
-            for d in dataset_list:
-                ret.append(d)
-                if len(ret) > max_num:
-                    break
-            return ret
-        else:
-            return dataset.dataset_items.list(prefetch=True)
-
-
 class ConcatenatedDataset(torch.utils.data.Dataset):
     def __init__(self, *datasets):
         if len(datasets) == 0:
