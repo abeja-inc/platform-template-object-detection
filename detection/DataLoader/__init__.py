@@ -1,2 +1,1 @@
-from .load_dataset import make_datalake_channel
-from .load_dataset import upload_datalake
+from .load_dataset import DataLoader
