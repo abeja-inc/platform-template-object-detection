@@ -134,7 +134,7 @@ class DataUploader:
         return dataset
 
 
-    def upload_dataset(self, data_mask: {str:int}, file: str, channel):
+    def upload_dataset(self, data_mask: {str:int}, file: str, file_type: str, task_type: str, channel):
         """
         Upload file on dataset with annotation
 
@@ -149,6 +149,11 @@ class DataUploader:
                                                    'xmax': 1000, 
                                                    'ymax': 900}}
             file : your file path to upload [str]
+            file_type : type of file
+                        ex) file_type = "image/jpeg"
+            task_type : type of task
+                        ex) task_type = "detection"
+                            task_type = "classification"
             channel : datalake channel
         
         Return
@@ -161,6 +166,8 @@ class DataUploader:
             >>> datalake_description = "this is hogehoge lake test"
             >>> channel = datauploader.create_datalake_channel(datalake_name, datalake_description)
             >>> file_path = "./tmp/foo.jpg"
+            >>> file_type = "image/jpeg"
+            >>> task_type = "detection"
             >>> file = datauploader.upload_datalake(file_path, channel)
             >>> data_mask = {"category_id": 0,
                              "label_id": 2,
@@ -168,22 +175,20 @@ class DataUploader:
                                       'ymin': 0, 
                                       'xmax': 1000, 
                                       'ymax': 900}}
+            >>> dataset_item = datauploader.upload_dataset(data_mask, file, file_type, task_type, channel)
         """
 
         source_data = [{
-                'data_type': 'image/jpeg',
+                'data_type': file_type,
                 'data_uri': 'datalake://{}/{}'.format(channel.channel_id, file.file_id),
                }
         ]
 
-        attributes = {'detection': [data_mask]}
+        attributes = {task_type: [data_mask]}
 
         dataset_item = dataset.dataset_items.create(source_data=source_data, attributes=attributes)
 
         return dataset_item
     
 
-if __name__ == "__main__":
-    organization_id = "1200123565071"
-    datauploader = DataUploader(organization_id)
     
