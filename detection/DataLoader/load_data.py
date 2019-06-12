@@ -197,7 +197,7 @@ class DataLoader:
         return dataset_item
     
 
-    def download_dataset(self, dataset_id: str, max_num=None: int, prefetch=False: bool):
+    def download_dataset(self, dataset_id: str, max_num=None, prefetch=False):
         """
         Download your favorite dataset
 

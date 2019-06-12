@@ -1,2 +1,1 @@
-from .load_dataset import DataUploader
-from .load_dataset import DataDownloader
+from .load_data import DataLoader
