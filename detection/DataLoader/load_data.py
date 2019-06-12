@@ -218,13 +218,5 @@ class DataLoader:
 
         dataset = self.dataset_client.get_dataset(dataset_id)
 
-        if max_num is not None:
-            dataset_list = dataset.dataset_items.list(prefetch=prefetch)
-            ret = []
-            for d in dataset_list:
-                ret.append(d)
-                if len(ret) > max_num:
-                    break
-            return ret
-        else:
-            return dataset.dataset_items.list(prefetch=prefetch)
+        return dataset
+
