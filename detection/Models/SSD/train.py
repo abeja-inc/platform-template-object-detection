@@ -1,7 +1,7 @@
-from data import *
-from utils.augmentations import SSDAugmentation
-from layers.modules import MultiBoxLoss
-from ssd import build_ssd
+from detection.data import *
+from .utils.augmentations import SSDAugmentation
+from .layers.modules import MultiBoxLoss
+from .ssd import build_ssd
 import os
 import sys
 import time
