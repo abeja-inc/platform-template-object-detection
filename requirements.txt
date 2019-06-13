@@ -4,3 +4,4 @@ torch
 torchvision
 abejacli
 abeja-sdk
+visdom
