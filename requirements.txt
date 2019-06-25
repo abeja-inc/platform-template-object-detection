@@ -1,7 +1,7 @@
-numpy
-opencv-python
-torch
-torchvision
-abejacli
-abeja-sdk
-visdom
+numpy==1.16.4
+opencv-python==4.1.0.25
+torch==1.1.0.post2
+torchvision==0.3.0
+abejacli==0.10.2
+abeja-sdk==0.2.4
+visdom==0.1.8.8
