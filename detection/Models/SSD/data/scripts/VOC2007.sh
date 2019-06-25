@@ -1,6 +1,8 @@
 #!/bin/bash
 # Ellis Brown
 
+set -e
+
 start=`date +%s`
 
 # handle optional download dir
@@ -22,9 +24,9 @@ fi
 
 echo "Downloading VOC2007 trainval ..."
 # Download the data.
-curl -LO http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtrainval_06-Nov-2007.tar
+wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtrainval_06-Nov-2007.tar
 echo "Downloading VOC2007 test data ..."
-curl -LO http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtest_06-Nov-2007.tar
+wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtest_06-Nov-2007.tar
 echo "Done downloading."
 
 # Extract data

@@ -31,9 +31,9 @@ fi
 # Download the image data.
 cd ./images
 echo "Downloading MSCOCO train images ..."
-curl -LO http://images.cocodataset.org/zips/train2014.zip
+wget http://images.cocodataset.org/zips/train2014.zip
 echo "Downloading MSCOCO val images ..."
-curl -LO http://images.cocodataset.org/zips/val2014.zip
+wget http://images.cocodataset.org/zips/val2014.zip
 
 cd ../
 if [ ! -d annotations]
@@ -44,7 +44,7 @@ fi
 # Download the annotation data.
 cd ./annotations
 echo "Downloading MSCOCO train/val annotations ..."
-curl -LO http://images.cocodataset.org/annotations/annotations_trainval2014.zip
+wget http://images.cocodataset.org/annotations/annotations_trainval2014.zip
 echo "Finished downloading. Now extracting ..."
 
 # Unzip data
@@ -64,6 +64,7 @@ echo "Creating trainval35k dataset..."
 
 # Download annotations json
 echo "Downloading trainval35k annotations from S3"
+# wgetだとAccess Deniedになる. 解凍はしない.
 curl -LO https://s3.amazonaws.com/amdegroot-datasets/instances_trainval35k.json.zip
 
 # combine train and val 
