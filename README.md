@@ -32,7 +32,7 @@ Downloda dataset :
 ```
 sh detection/Models/SSD/data/scripts/VOC2007.sh
 ```
-or
+and
 ```
 sh detection/Models/SSD/data/scripts/VOC2012.sh
 ```
