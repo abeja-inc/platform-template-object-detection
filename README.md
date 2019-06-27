@@ -39,7 +39,8 @@ sh detection/Models/SSD/data/scripts/VOC2012.sh
 ## Train SSD Model
 
 ```
-python detection/Models/SSD/train.py
+python detection/Models/SSD/train.py --dataset <VOC or COCO> \
+                                     --dataset_root <path to your saved data>
 ```
 
 ## Evaluatioin
