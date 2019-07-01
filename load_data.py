@@ -37,7 +37,7 @@ class DataLoader:
             >>> dataloader = DataLoader(organization_id)
             >>> name = "test_hoge_foo"
             >>> description = "this is test datalake"
-            >>> channel = dataLoader.create_datalake_channel(name, description)
+            >>> channel = dataloader.create_datalake_channel(name, description)
         """
 
         channel = self.datalake_client.channels.create(name, description, 
