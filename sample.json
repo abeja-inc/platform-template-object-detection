@@ -1,0 +1,30 @@
+{
+  "name": "sample", 
+  "type": "detection", 
+  "props": {
+    "categories": [
+      {
+        "labels": [
+          {
+            "label_id": 0, 
+            "label": "aeroplane"
+          }, 
+          {
+            "label_id": 1, 
+            "label": "bicycle"
+          }, 
+          {
+            "label_id": 2, 
+            "label": "bird"
+          }, 
+          {
+            "label_id": 3, 
+            "label": "boat"
+          } 
+        ],
+        "category_id": 0,
+        "name": "sample"
+      }
+    ]
+  }
+}
