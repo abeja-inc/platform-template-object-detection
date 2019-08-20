@@ -1,3 +1,8 @@
+"""
+MIT License
+Copyright (c) 2017 Max deGroot, Ellis Brown
+https://github.com/amdegroot/ssd.pytorch
+"""
 import torch
 
 

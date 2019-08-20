@@ -1,3 +1,8 @@
+"""
+MIT License
+Copyright (c) 2017 Max deGroot, Ellis Brown
+https://github.com/amdegroot/ssd.pytorch/blob/master/utils/augmentations.py
+"""
 import torch
 from torchvision import transforms
 import cv2
