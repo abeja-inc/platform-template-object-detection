@@ -34,68 +34,92 @@ This is the template of object-detection task for ABEJA Platform.
 | NMS_THRESHOLD | float | The threshold for IoU to consider bounding boxes as the same. Default `0.45`. |
 | OVERLAP_THRESHOLD | float | The overlap threshold used when matching boxes. Need to be from `0.0` to `1.0`. Default `0.5` |
 | NEG_POS | int | Hard Negative Mining ratio. Default `3` |
-| CONFIDENCE_THRESHOLD | bool | Results above this threshold will be returned. **This option is valid only for prediction (or inference).** Default `0.1` |
+| CONFIDENCE_THRESHOLD | float | Results above this threshold will be returned. **This option is valid only for prediction (or inference).** Default `0.1` |
 
-## Run on local
+## Preparation
 
-You can run on local using [ABEJA Platform CLI](https://developers.abeja.io/developer-tools/cli/)
+Before running this script, please install [ABEJA Platform CLI](https://developers.abeja.io/developer-tools/cli/).
+You need to setup your [configuration](https://developers.abeja.io/reference/cli/configuration-command/init/) at first.
 
-### Training
+
+## Debug on local
 
 You can train on local with [debug-local](https://developers.abeja.io/reference/cli/training-command/training-debug-local/) command.
 
 ```
 $ abeja training debug-local \
   --handler train:handler \
-  --image all-cpu:19.04 \
+  --image abeja-inc/all-cpu:19.04 \
   --organization_id xxxxx \ 
-  --datasets train:xxxxx \
-  --environment ABEJA_PLATFORM_USER_ID:xxxxx \ 
-  --environment ABEJA_PLATFORM_PERSONAL_ACCESS_TOKEN:xxxxx
+  --datasets train:xxxxx
 ```
 
-**environment variables**
 
-| env | type | description |
-| --- | --- | --- |
-| ABEJA_ORGANIZATION_ID | str | Your organization ID. |
-| ABEJA_PLATFORM_USER_ID | str | Your user ID. |
-| ABEJA_PLATFORM_PERSONAL_ACCESS_TOKEN | str | Your Access Token. |
+## Train on ABEJA Platform
 
-### Inference
+### Prepare `training.yaml` file
+
+```
+name: my-detection-model-from-template
+handler: train:handler
+image: abeja-inc/all-gpu:19.04
+datasets:
+  "train": "xxx"
+  "val": "xxx"
+```
+
+### Create Job definition
+
+Create job definition on the platform at first.
+
+```
+abeja training create-job-definition
+```
+
+### Create Version & Create Job
+
+When you modify your code, run the command to deploy your code on the platform.
+
+```
+abeja training create-version
+```
+
+After deploying it, you can create the job by running the command below.
+
+```
+abeja training create-job -d "my first job"
+```
+
+After creating job, you can check the status by ABEJA Platform Console.
+
+## Inference on local
 
 You can do prediction on local with [run-local](https://developers.abeja.io/reference/cli/model-command/run-local/) command.
 
 ```
 $ abeja model run-local \
   --handler predict:handler \
-  --image abeja/all-cpu:19.04 \
-  --environment ABEJA_ORGANIZATION_ID:xxxxx \
-  --environment ABEJA_PLATFORM_USER_ID:xxxxx \
-  --environment ABEJA_PLATFORM_PERSONAL_ACCESS_TOKEN:xxxxx \
+  --image abeja-inc/all-cpu:19.04 \
   --environment TRAINING_JOB_DATASETS:'{"data":1111111111111}' \
   --environment CONFIDENCE_THRESHOLD:0.9 \
   --input sample.jpg
 ```
 
-**environment variables**
+**environment variables for inference**
 
 | env | type | description |
 | --- | --- | --- |
-| ABEJA_ORGANIZATION_ID | str | Your organization ID. |
-| ABEJA_PLATFORM_USER_ID | str | Your user ID. |
-| ABEJA_PLATFORM_PERSONAL_ACCESS_TOKEN | str | Your Access Token. |
-| TRAINING_JOB_DATASETS | str | Dataset IDs. e.g `'{"data":1111111111111}'` |
+| TRAINING_JOB_DATASETS | str | Dataset IDs. e.g `'{"data":1111111111111}'`.  The prediction script fetches the label information from training data. |
+| CONFIDENCE_THRESHOLD | float | Results above this threshold will be returned. **This option is valid only for prediction (or inference).** Default `0.1` |
+
+You can see more detail of the parameters on `parameters.py`.
 
 Also you can start inference API on local with [run-local-server](https://developers.abeja.io/reference/cli/model-command/run-local-server/) command.
 
 ```
 $ abeja model run-local-server \
   --handler predict:handler \
-  --image abeja/all-cpu:19.04 \
-  --environment ABEJA_ORGANIZATION_ID:xxxxx \
-  --environment ABEJA_PLATFORM_USER_ID:xxxxx \
-  --environment ABEJA_PLATFORM_PERSONAL_ACCESS_TOKEN:xxxxx \
+  --image abeja-inc/all-cpu:19.04 \
   --environment TRAINING_JOB_DATASETS:'{"data":1111111111111}' \
   --environment CONFIDENCE_THRESHOLD:0.3 \
 ```
