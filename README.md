@@ -36,13 +36,13 @@ This is the template of object-detection task for ABEJA Platform.
 | NEG_POS | int | Hard Negative Mining ratio. Default `3` |
 | CONFIDENCE_THRESHOLD | float | Results above this threshold will be returned. **This option is valid only for prediction (or inference).** Default `0.1` |
 
-## Run on local
+## Preparation
 
-You can run on local using [ABEJA Platform CLI](https://developers.abeja.io/developer-tools/cli/)
+Before running this script, please install [ABEJA Platform CLI](https://developers.abeja.io/developer-tools/cli/).
 You need to setup your [configuration](https://developers.abeja.io/reference/cli/configuration-command/init/) at first.
 
 
-### Debug on local
+## Debug on local
 
 You can train on local with [debug-local](https://developers.abeja.io/reference/cli/training-command/training-debug-local/) command.
 
@@ -92,7 +92,7 @@ abeja training create-job -d "my first job"
 
 After creating job, you can check the status by ABEJA Platform Console.
 
-### Inference on local
+## Inference on local
 
 You can do prediction on local with [run-local](https://developers.abeja.io/reference/cli/model-command/run-local/) command.
 
@@ -110,6 +110,7 @@ $ abeja model run-local \
 | env | type | description |
 | --- | --- | --- |
 | TRAINING_JOB_DATASETS | str | Dataset IDs. e.g `'{"data":1111111111111}'`.  The prediction script fetches the label information from training data. |
+| CONFIDENCE_THRESHOLD | float | Results above this threshold will be returned. **This option is valid only for prediction (or inference).** Default `0.1` |
 
 You can see more detail of the parameters on `parameters.py`.
 
