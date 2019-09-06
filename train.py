@@ -219,9 +219,11 @@ def handler(context):
 
         # keep latest epoch loss
         if epoch_train_loss != 0.0:
-            latest_epoch_train_loss = epoch_train_loss
+            num_total = len(dataloaders_dict['train'])
+            latest_epoch_train_loss = epoch_train_loss / num_total
         if epoch_val_loss != 0.0:
-            latest_epoch_val_loss = epoch_val_loss
+            num_total = len(dataloaders_dict['val'])
+            latest_epoch_val_loss = epoch_val_loss / num_total
 
         print('-------------')
         print('epoch {} || Epoch_TRAIN_Loss:{:.4f} || Epoch_VAL_Loss:{:.4f}'.format(
