@@ -64,8 +64,8 @@ name: my-detection-model-from-template
 handler: train:handler
 image: abeja-inc/all-gpu:19.04
 datasets:
-  "train": "xxx"
-  "val": "xxx"
+  train: "xxx"
+  val: "xxx"
 ```
 
 ### Create Job definition
@@ -123,3 +123,8 @@ $ abeja model run-local-server \
   --environment TRAINING_JOB_DATASETS:'{"data":1111111111111}' \
   --environment CONFIDENCE_THRESHOLD:0.3 \
 ```
+
+## Prepare test data
+
+You can use this sample script to test it with Pascal VOC Dataset.
+See the detail of this [repository](https://github.com/abeja-inc/abeja-platform-samples/tree/master/dataset/voc).
