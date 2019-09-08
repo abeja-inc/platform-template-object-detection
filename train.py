@@ -3,7 +3,7 @@ import numpy as np
 import time
 import random
 
-from tensorboardX import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 import torch
 import torch.utils.data as data
 import torch.nn as nn
