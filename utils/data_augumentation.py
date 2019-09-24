@@ -86,22 +86,24 @@ class SubtractMeans(object):
 
 class ToAbsoluteCoords(object):
     def __call__(self, image, boxes=None, labels=None):
-        height, width, channels = image.shape
-        boxes[:, 0] *= width
-        boxes[:, 2] *= width
-        boxes[:, 1] *= height
-        boxes[:, 3] *= height
+        if boxes is not None:
+            height, width, channels = image.shape
+            boxes[:, 0] *= width
+            boxes[:, 2] *= width
+            boxes[:, 1] *= height
+            boxes[:, 3] *= height
 
         return image, boxes, labels
 
 
 class ToPercentCoords(object):
     def __call__(self, image, boxes=None, labels=None):
-        height, width, channels = image.shape
-        boxes[:, 0] /= width
-        boxes[:, 2] /= width
-        boxes[:, 1] /= height
-        boxes[:, 3] /= height
+        if boxes is not None:
+            height, width, channels = image.shape
+            boxes[:, 0] /= width
+            boxes[:, 2] /= width
+            boxes[:, 1] /= height
+            boxes[:, 3] /= height
 
         return image, boxes, labels
 
@@ -267,6 +269,9 @@ class RandomSampleCrop(object):
                 # convert to integer rect x1,y1,x2,y2
                 rect = np.array([int(left), int(top), int(left+w), int(top+h)])
 
+                if boxes is None:
+                    return current_image, boxes, labels
+
                 # calculate IoU (jaccard overlap) b/t the cropped and gt boxes
                 overlap = jaccard_numpy(boxes, rect)
 
@@ -318,7 +323,7 @@ class Expand(object):
     def __init__(self, mean):
         self.mean = mean
 
-    def __call__(self, image, boxes, labels):
+    def __call__(self, image, boxes=None, labels=None):
         if random.randint(2):
             return image, boxes, labels
 
@@ -335,9 +340,10 @@ class Expand(object):
                      int(left):int(left + width)] = image
         image = expand_image
 
-        boxes = boxes.copy()
-        boxes[:, :2] += (int(left), int(top))
-        boxes[:, 2:] += (int(left), int(top))
+        if boxes is not None:
+            boxes = boxes.copy()
+            boxes[:, :2] += (int(left), int(top))
+            boxes[:, 2:] += (int(left), int(top))
 
         return image, boxes, labels
 
