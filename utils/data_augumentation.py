@@ -86,7 +86,7 @@ class SubtractMeans(object):
 
 class ToAbsoluteCoords(object):
     def __call__(self, image, boxes=None, labels=None):
-        if boxes is not None:
+        if len(boxes) > 0:
             height, width, channels = image.shape
             boxes[:, 0] *= width
             boxes[:, 2] *= width
@@ -98,7 +98,7 @@ class ToAbsoluteCoords(object):
 
 class ToPercentCoords(object):
     def __call__(self, image, boxes=None, labels=None):
-        if boxes is not None:
+        if len(boxes) > 0:
             height, width, channels = image.shape
             boxes[:, 0] /= width
             boxes[:, 2] /= width
@@ -269,7 +269,7 @@ class RandomSampleCrop(object):
                 # convert to integer rect x1,y1,x2,y2
                 rect = np.array([int(left), int(top), int(left+w), int(top+h)])
 
-                if boxes is None:
+                if len(boxes) == 0:
                     return current_image, boxes, labels
 
                 # calculate IoU (jaccard overlap) b/t the cropped and gt boxes
@@ -340,7 +340,7 @@ class Expand(object):
                      int(left):int(left + width)] = image
         image = expand_image
 
-        if boxes is not None:
+        if len(boxes) > 0:
             boxes = boxes.copy()
             boxes[:, :2] += (int(left), int(top))
             boxes[:, 2:] += (int(left), int(top))
@@ -351,6 +351,8 @@ class Expand(object):
 class RandomMirror(object):
     def __call__(self, image, boxes, classes):
         _, width, _ = image.shape
+        if len(boxes) < 1:
+            return image, boxes, classes
         if random.randint(2):
             image = image[:, ::-1]
             boxes = boxes.copy()

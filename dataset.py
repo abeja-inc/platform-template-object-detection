@@ -140,11 +140,13 @@ class ABEJAPlatformDataset(data.Dataset):
                 label_id
             ])
 
-        anno_list = np.array(anno_list)
-
         # 3. perform preprocess
-        img, boxes, labels = self.transform(
-            img, self.phase, anno_list[:, :4], anno_list[:, 4])
+        if anno_list:
+            anno_list = np.array(anno_list)
+            img, boxes, labels = self.transform(
+                img, self.phase, anno_list[:, :4], anno_list[:, 4])
+        else:
+            img, boxes, labels = self.transform(img, self.phase, np.empty(0), np.empty(0))
 
         # change channel color order from BGR to RGB
         # and convert order from (h, w, c) to (c, h, w)
