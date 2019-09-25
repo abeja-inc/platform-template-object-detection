@@ -128,6 +128,18 @@ class ABEJAPlatformDataset(data.Dataset):
 
         # 2. build list of annotation
         anno_list = []
+        if not dataset_item.attributes['detection']:
+            dataset_item.attributes['detection'] = [
+                {
+                    'label_id': -1,
+                    'rect': {
+                        'xmin': width,
+                        'ymin': height,
+                        'xmax': width,
+                        'ymax': height,
+                    }
+                }
+            ]
         for detection in dataset_item.attributes['detection']:
             label_id = detection['label_id']
             rect = detection['rect']
@@ -141,12 +153,9 @@ class ABEJAPlatformDataset(data.Dataset):
             ])
 
         # 3. perform preprocess
-        if anno_list:
-            anno_list = np.array(anno_list)
-            img, boxes, labels = self.transform(
-                img, self.phase, anno_list[:, :4], anno_list[:, 4])
-        else:
-            img, boxes, labels = self.transform(img, self.phase, np.empty(0), np.empty(0))
+        anno_list = np.array(anno_list)
+        img, boxes, labels = self.transform(
+            img, self.phase, anno_list[:, :4], anno_list[:, 4])
 
         # change channel color order from BGR to RGB
         # and convert order from (h, w, c) to (c, h, w)
