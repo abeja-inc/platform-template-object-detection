@@ -85,7 +85,7 @@ class SubtractMeans(object):
 
 
 class ToAbsoluteCoords(object):
-    def __call__(self, image, boxes=None, labels=None):
+    def __call__(self, image, boxes, labels):
         height, width, channels = image.shape
         boxes[:, 0] *= width
         boxes[:, 2] *= width
@@ -96,7 +96,7 @@ class ToAbsoluteCoords(object):
 
 
 class ToPercentCoords(object):
-    def __call__(self, image, boxes=None, labels=None):
+    def __call__(self, image, boxes, labels):
         height, width, channels = image.shape
         boxes[:, 0] /= width
         boxes[:, 2] /= width
@@ -236,7 +236,7 @@ class RandomSampleCrop(object):
             (None, None),
         )
 
-    def __call__(self, image, boxes=None, labels=None):
+    def __call__(self, image, boxes, labels):
         height, width, _ = image.shape
         while True:
             # randomly choose a mode

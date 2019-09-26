@@ -81,19 +81,9 @@ def handler(request, context):
     content = contents[0].read()
     f = io.BytesIO(content)
     pil_img = Image.open(f)
-    pil_img = np.asarray(pil_img).astype(np.float32)
+    pil_img = np.asarray(pil_img.convert('RGB')).astype(np.float32)
     height, width, _channels = pil_img.shape
-
-    # TODO: currently image smaller than IMG_SIZE will not be handled properly.
-    if height < Parameters.IMG_SIZE or width < Parameters.IMG_SIZE:
-        return {
-            'status_code': http.HTTPStatus.BAD_REQUEST,
-            'content_type': 'application/json',
-            'content': {
-                'error': http.HTTPStatus.BAD_REQUEST[1],
-                'description': f'height and width should be greater than {Parameters.IMG_SIZE}'
-            }
-        }
+    print(f'image shape, (height, width, channels) : ({height}, {width}, {_channels})')
 
     # the dataset's mean rgb values,
     transform = DataTransform(

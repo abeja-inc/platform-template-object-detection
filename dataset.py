@@ -128,6 +128,20 @@ class ABEJAPlatformDataset(data.Dataset):
 
         # 2. build list of annotation
         anno_list = []
+        if not dataset_item.attributes['detection']:
+            # NOTE: add annotation as background ( no object )
+            # label_id: -1 will be incremented and used for background
+            dataset_item.attributes['detection'] = [
+                {
+                    'label_id': -1,
+                    'rect': {
+                        'xmin': width,
+                        'ymin': height,
+                        'xmax': width,
+                        'ymax': height,
+                    }
+                }
+            ]
         for detection in dataset_item.attributes['detection']:
             label_id = detection['label_id']
             rect = detection['rect']
