@@ -81,7 +81,7 @@ def handler(request, context):
     content = contents[0].read()
     f = io.BytesIO(content)
     pil_img = Image.open(f)
-    pil_img = np.asarray(pil_img).astype(np.float32)
+    pil_img = np.asarray(pil_img.convert('RGB')).astype(np.float32)
     height, width, _channels = pil_img.shape
     print(f'image shape, (height, width, channels) : ({height}, {width}, {_channels})')
 
