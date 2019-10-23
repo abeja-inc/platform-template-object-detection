@@ -123,7 +123,7 @@ class ABEJAPlatformDataset(data.Dataset):
         file_like_object = io.BytesIO(content)
 
         img = Image.open(file_like_object)
-        img = np.asarray(img)
+        img = np.asarray(img.convert('RGB')).astype(np.float32)
         height, width, channels = img.shape
 
         # 2. build list of annotation
