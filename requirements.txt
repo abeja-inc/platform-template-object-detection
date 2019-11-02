@@ -2,5 +2,5 @@ torch==1.2
 torchvision==0.4
 python-json-logger==0.1.10
 tb-nightly==1.15.0a20190903
-Pillow==6.1.0
+Pillow==6.2.0
 
