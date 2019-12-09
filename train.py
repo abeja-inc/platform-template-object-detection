@@ -240,7 +240,9 @@ def handler(context):
             model_path = os.path.join(Parameters.ABEJA_TRAINING_RESULT_DIR, f'ssd300_{str(epoch + 1)}.pth')
             torch.save(net.state_dict(), model_path)
 
+        writer.flush()
         epoch_train_loss = 0.0
         epoch_val_loss = 0.0
 
     torch.save(net.state_dict(), os.path.join(Parameters.ABEJA_TRAINING_RESULT_DIR, 'model.pth'))
+    writer.close()
