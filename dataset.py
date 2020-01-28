@@ -160,9 +160,8 @@ class ABEJAPlatformDataset(data.Dataset):
         img, boxes, labels = self.transform(
             img, self.phase, anno_list[:, :4], anno_list[:, 4])
 
-        # change channel color order from BGR to RGB
-        # and convert order from (h, w, c) to (c, h, w)
-        img = torch.from_numpy(img[:, :, (2, 1, 0)]).permute(2, 0, 1)
+        # convert order from (h, w, c) to (c, h, w)
+        img = torch.from_numpy(img).permute(2, 0, 1)
 
         # create np.array that sets BBox and label, gt means `ground truth`
         gt = np.hstack((boxes, np.expand_dims(labels, axis=1)))
