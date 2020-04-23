@@ -54,8 +54,10 @@ def handler(context):
 
     print(f'number of classes : {num_classes}')
 
+    print("Start downloading datasets.")
     dataset_items = list(load_dataset_from_api(
         train_dataset_id, max_num=Parameters.MAX_ITEMS))
+    print("Finish downloading datasets.")
 
     random.shuffle(dataset_items)
     if val_dataset_id is not None:

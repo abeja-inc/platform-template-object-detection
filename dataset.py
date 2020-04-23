@@ -7,6 +7,7 @@ import numpy as np
 from PIL import Image
 import torch
 import torch.utils.data as data
+from tqdm import tqdm
 
 
 def get_dataset_ids(datasets: dict) -> Tuple[str, Optional[str]]:
@@ -60,17 +61,20 @@ def set_categories(dataset_ids: list) -> Tuple[Dict[str, int], Dict[int, str]]:
 def load_dataset_from_api(dataset_id, max_num=None, organization_id=None, credential=None):
     client = Client(organization_id, credential)
     dataset = client.get_dataset(dataset_id)
-    
+
     if max_num is not None:
-        dataset_list = dataset.dataset_items.list(prefetch=False)
         ret = []
-        for d in dataset_list:
+        for d in tqdm(dataset.dataset_items.list(prefetch=True), total=max_num):
             ret.append(d)
             if len(ret) > max_num:
                 break
         return ret
     else:
-        return dataset.dataset_items.list(prefetch=True)
+        ret = []
+        total_items = dataset.total_count
+        for item in tqdm(dataset.dataset_items.list(prefetch=True), total=total_items):
+            ret.append(item)
+        return ret
 
 
 class ConcatenatedDataset(data.Dataset):
